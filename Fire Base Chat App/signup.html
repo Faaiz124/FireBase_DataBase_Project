@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page with Background Image Example</title>
+  <link rel="stylesheet" href="./style.css">
+
+  <link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+
+<body>
+
+  <!-- NewPage -->
+  <div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<form class="login100-form validate-form">
+					<span class="login100-form-title p-b-20">
+						Sign-Up
+					</span>
+					<span class="login100-form-title p-b-40">
+						<i class="zmdi zmdi-font"></i>
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input id="name" class="input100" type="text" name="Name">
+						<span class="focus-input100" data-placeholder="Name"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input id="PhoneNum" class="input100" type="number" name="PhoneNum">
+						<span class="focus-input100" data-placeholder="PhoneNum"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input id="email" class="input100" type="text" name="email">
+						<span class="focus-input100" data-placeholder="Email"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input id="password" class="input100" type="password" name="pass">
+						<span class="focus-input100" data-placeholder="Password"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+              <!-- <button onclick="SignUp()" class="login100-form-btn btn" type="submit">sign-up</button> -->
+							<div onclick="SignUp()" class="login100-form-btn btn"  type="submit">
+								Sign-Up
+							</div>
+						</div>
+					</div>
+
+					<div class="text-center p-t-50">
+						<span class="txt1">
+							Don’t have an account?
+						</span>
+
+						<a class="txt2" href="index.html">
+							Sign_In
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+  <!-- NewPage -->
+
+
+
+
+
+  <!-- partial:index.partial.html -->
+  <!-- <div id="bg"></div>
+
+  <div class="form">
+    <div class="form-field name">
+      <input id="name" type="text" placeholder="Name" required />
+    </div>
+    <div class="form-field name">
+      <input id="PhoneNum" type="number" placeholder="PhoneNum" required />
+    </div>
+    
+    <div class="form-field name">
+      <input id="email" type="email" placeholder="Email / Username" required />
+    </div>
+
+    <div class="form-field passw">
+      <input id="password" type="password" placeholder="Password" required />
+    </div>
+
+    <div class="form-field">
+      <button onclick="SignUp()" class="btn" type="submit">sign-up</button>
+    </div>
+    <div class="signup">
+      <p>
+        <a href="index.html">Have an account? Log in</a>
+      </p>
+    </div>
+  </div> -->
+  <!-- partial -->
+
+
+
+  <script type="module" src="App.js"></script>
+</body>
+
+</html>
