@@ -316,10 +316,11 @@ html {
         transform: rotate(360deg);
     }
 }
-/* 
-.displayNone{
-     display: none; 
-} */
+
+    .displayNone{
+        display: none; 
+    }
+
 .floot{
     padding: 0 auto;
     background-color: #3498db;

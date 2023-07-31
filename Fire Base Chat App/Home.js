@@ -41,18 +41,18 @@ onAuthStateChanged(auth, (user) => {
     const useruid = user.uid;
     // console.log(uid)
     getUserData(uid)
-    if (user && uid) {
-        const uid = user;
-        // console.log(uid)
-        if (location.pathname !== '/Home.html') {
-            location.href = 'Home.html'
-        }
+    // if (user && uid) {
+    //     const uid = user;
+    //     // console.log(uid)
+    //     if (location.pathname !== '/Home.html') {
+    //         location.href = 'Home.html'
+    //     }
 
-    } else {
-        if (location.pathname !== '/index.html' && location.pathname !== "/signup.html") {
-            location.href = "index.html"
-        }
-    }
+    // } else {
+    //     if (location.pathname !== '/index.html' && location.pathname !== "/signup.html") {
+    //         location.href = "index.html"
+    //     }
+    // }
 });
 
 
@@ -132,3 +132,16 @@ await updateDoc(
         console.log(err)
     }
 })
+
+const chatqury=()=>{
+    var innerwidth = window.innerWidth;
+      if (innerwidth <= 768) {
+        // console.log(innerwidth)
+        window.location.href = "Chat.html"
+      }
+      else {
+        window.location.href = "comChat.html"
+      }
+}
+
+window.chatqury=chatqury;

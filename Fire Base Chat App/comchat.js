@@ -13,19 +13,19 @@ import { getFirestore, addDoc, onSnapshot, doc, getDoc, updateDoc, collection, q
 
 
 
-// const getOnlineUser = async (email) => {
+const getOnlineUser = async (email) => {
 
-//     const q = query(collection(db, "users"), where("email", "==", email));
-//     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-//         const user = [];
-//         querySnapshot.forEach((doc) => {
-//             user.push(doc.data());
-//         });
-//         // var profname = document.getElementById("profname")
-//         //   console.log("Current cities in CA: ", user);
-//         // profname.innerHTML = `${user[0].name}`
-//     });
-// }
+    const q = query(collection(db, "users"), where("email", "==", email));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const user = [];
+        querySnapshot.forEach((doc) => {
+            user.push(doc.data());
+        });
+        var profname = document.getElementById("profname")
+        //   console.log("Current cities in CA: ", user);
+        profname.innerHTML = `${user[0].name}`
+    });
+}
 
 ////////////////////////////////////////
 const getAllUsers = async (email) => {
@@ -67,7 +67,7 @@ onAuthStateChanged(auth, (user) => {
     // const useruid = user.uid;
     // console.log("name",user)
     getAllUsers(user.email)
-    // getOnlineUser(user.email)
+    getOnlineUser(user.email)
     const img = user[0];
 });
 
@@ -87,11 +87,11 @@ const slectedChat = (name, imgcheck, slectedUid, email) => {
 
     const slectedProImg = document.getElementById("slectedProImg")
     const SlectedName = document.getElementById("SlectedName")
-    const floot = document.getElementById("floot")
+    const displayNone = document.getElementById("displayNone")
     slectedProImg.src = `${imgcheck}`;
     // console.log(slectedProImg.src)
     SlectedName.innerText = ` ${name}`;
-    floot.style.display = 'block';
+    displayNone.style.display = 'block';
     // console.log(ChatId)
     getAllImg(ChatId, imgcheck, email)
 }
@@ -108,27 +108,24 @@ const logout = () => {
 }
 // getUserData()
 window.logout = logout
-const send = async () => {
-    const messeg_input = document.getElementById("messeg_input");
+
+const messeg_input = document.getElementById("messeg_input");
+
+messeg_input.addEventListener("keydown", async (e) => {
     const currentUserId = localStorage.getItem('user');
-    let inputValue = messeg_input.value.trim(); // Trim leading/trailing whitespace
+    let inputValue = messeg_input.value;
+    if (e.keyCode == 13 && inputValue.trim() !== "") { // Check if input is not empty (ignoring leading/trailing whitespace)
+        let ChatId;
+        if (currentUserId < slectedUserId) {
+            ChatId = currentUserId + slectedUserId;
+        } else {
+            ChatId = slectedUserId + currentUserId;
+        }
+        //////////////////////////
+        let chatTime = moment(new Date()).fromNow();
+        const chat_boxs = document.getElementById("chat-boxs");
 
-    if (inputValue === "") { // Check if input is empty
-        // Return early as the message is empty
-        return;
-    }
-
-    let ChatId;
-    if (currentUserId < slectedUserId) {
-        ChatId = currentUserId + slectedUserId;
-    } else {
-        ChatId = slectedUserId + currentUserId;
-    }
-    //////////////////////////
-    let chatTime = moment(new Date()).fromNow(); // Use the current time instead of inputValue.time
-    const chat_boxs = document.getElementById("chat-boxs");
-
-    chat_boxs.innerHTML += `
+        chat_boxs.innerHTML += `
         <div class="d-flex justify-content-end mb-4">
         <div class="msg_cotainer_send">
         ${inputValue}
@@ -139,22 +136,23 @@ const send = async () => {
                 class="rounded-circle user_img_msg">
         </div>
     </div>
-  `;
-  messeg_input.value = "";
-  ////////////////////////////////
-  // console.log("ChatId", ChatId)
-  // console.log(messeg_input.value)
-  // Add a new document with a generated id.
-  const time = new Date();
-  const docRef = await addDoc(collection(db, "messeges"), {
-        messeges: inputValue,
-        ChatID: ChatId,
-        time: time,
-        sender: currentUserId,
-        receiver: slectedUserId,
-    });
-    console.log("message Sent");
-}
+`
+        messeg_input.value = "";
+        ////////////////////////////////
+        // console.log("ChatId", ChatId)
+        // console.log(messeg_input.value)
+        // Add a new document with a generated id.
+        const time = new Date();
+        const docRef = await addDoc(collection(db, "messeges"), {
+            messeges: inputValue,
+            ChatID: ChatId,
+            time: time,
+            sender: currentUserId,
+            receiver: slectedUserId,
+        });
+        console.log("message Sent");
+    }
+});
 
 
 
@@ -242,5 +240,4 @@ const profile = () => {
 
 
 window.profile = profile;
-window.send = send;
 window.slectedChat = slectedChat;
