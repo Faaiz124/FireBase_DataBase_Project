@@ -29,38 +29,45 @@ import { getFirestore, addDoc, onSnapshot, doc, getDoc, updateDoc, collection, q
 
 ////////////////////////////////////////
 const getAllUsers = async (email) => {
-
     const q = query(collection(db, "users"), where("email", "!=", email));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const user = [];
         querySnapshot.forEach((doc) => {
             user.push(doc.data());
         });
-        var Users_ChatBox = document.getElementById("Users-ChatBox")
-        //   console.log("Current cities in CA: ", user);
+        var Users_ChatBox = document.getElementById("Users-ChatBox");
+
+        // Clear the existing content in Users_ChatBox before populating new data
+        Users_ChatBox.innerHTML = '';
+
+        // console.log("Current cities in CA: ", user);
+
         for (let i = 0; i < user.length; i++) {
-            const { name, img, uid } = user[i];
-            const imgcheck = img ? img : `./img/profile.png`
-            // console.log(uid)
+            const { name, img, uid, Active } = user[i];
+            const imgcheck = img ? img : `./img/profile.png`;
+
             Users_ChatBox.innerHTML += `<ul class="contacts">
-          <li onclick="slectedChat('${name}','${imgcheck}','${uid}', '${email}')" class="active">
+            <li onclick="slectedChat('${name}','${imgcheck}','${uid}', '${email}','${Active}')" class="active">
             <div class="d-flex bd-highlight">
-              <div class="img_cont">
-                <img src=${imgcheck} class="rounded-circle user_img">
-                <span class="online_icon"></span>
-              </div>
-              <div class="user_info">
-                <span>${name}</span>
-                <p>${name} is online</p>
-              </div>
+            <div class="img_cont">
+            <img src=${imgcheck} class="rounded-circle user_img">
+            <span class="${Active ? 'online_icon' : 'offline'}"></span>
             </div>
-          </li>
-        </ul>`;
-            document.getElementById('loader').style.display = 'none';
+            <div class="user_info">
+            <span>${name}</span>
+            <p>${Active ? 'online' : 'offline'}</p>
+            </div>
+            </div>
+            </li>
+            </ul>`;
         }
+
+        document.getElementById('loader').style.display = 'none';
     });
 }
+
 document.getElementById('loader').style.display = 'block';
+
 
 onAuthStateChanged(auth, (user) => {
     // const uid = localStorage.getItem('user')
@@ -73,7 +80,7 @@ onAuthStateChanged(auth, (user) => {
 
 let slectedUserId;
 
-const slectedChat = (name, imgcheck, slectedUid, email) => {
+const slectedChat = (name, imgcheck, slectedUid, email, Active) => {
     // console.log(email )
     slectedUserId = slectedUid;
     const currentUserId = localStorage.getItem('user');
@@ -83,17 +90,29 @@ const slectedChat = (name, imgcheck, slectedUid, email) => {
     } else {
         ChatId = slectedUserId + currentUserId;
     }
-
-
-    const slectedProImg = document.getElementById("slectedProImg")
-    const SlectedName = document.getElementById("SlectedName")
     const floot = document.getElementById("floot")
-    slectedProImg.src = `${imgcheck}`;
-    // console.log(slectedProImg.src)
-    SlectedName.innerText = ` ${name}`;
     floot.style.display = 'block';
+    const chatslectin = document.getElementById("chatslectin")
+    chatslectin.innerHTML = '';
+    chatslectin.innerHTML += ` <div class="img_cont">
+    <img id="slectedProImg"
+        src="${imgcheck}"
+        class="rounded-circle user_img">
+        </div>
+     <div class="user_info">
+    <span id="SlectedName">${name}</span>
+     </div>
+     <div class="video_cam">
+     </div>`
+    //  console.log(Active)
+
+    // const slectedProImg = document.getElementById("slectedProImg")
+    // const SlectedName = document.getElementById("SlectedName")
+    // slectedProImg.src = `${imgcheck}`;
+    // console.log(slectedProImg.src)
+    // SlectedName.innerText = ` ${name}`;
     // console.log(ChatId)
-    getAllImg(ChatId, imgcheck, email)
+    getAllImg(ChatId, imgcheck, email, Active)
 }
 
 const backbtn = () => {
@@ -140,13 +159,13 @@ const send = async () => {
         </div>
     </div>
   `;
-  messeg_input.value = "";
-  ////////////////////////////////
-  // console.log("ChatId", ChatId)
-  // console.log(messeg_input.value)
-  // Add a new document with a generated id.
-  const time = new Date();
-  const docRef = await addDoc(collection(db, "messeges"), {
+    messeg_input.value = "";
+    ////////////////////////////////
+    // console.log("ChatId", ChatId)
+    // console.log(messeg_input.value)
+    // Add a new document with a generated id.
+    const time = new Date();
+    const docRef = await addDoc(collection(db, "messeges"), {
         messeges: inputValue,
         ChatID: ChatId,
         time: time,
@@ -238,6 +257,23 @@ const getAllMesseges = async (ChatId, img, imgcheck) => {
 const profile = () => {
     window.location.href = "Home.html";
 }
+
+const setActiveStatus = async (status) => {
+    const uid = localStorage.getItem('user')
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, {
+        Active: status
+    })
+}
+
+
+window.addEventListener("beforeunload", () => {
+    setActiveStatus(false)
+})
+
+window.addEventListener("focus", () => {
+    setActiveStatus(true)
+})
 
 
 

@@ -4,7 +4,7 @@ import { auth, db, app } from "./Firebase.js"
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
-import {  getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL, deleteObject  } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
+import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-storage.js";
 // console.log({auth ,db, app})
 const storage = getStorage();
 
@@ -85,22 +85,29 @@ const uploadFile = (file) => {
     return new Promise((resolve, reject) => {
         const mountainsRef = ref(storage, `images/proPIC/${file.name}`);
         const uploadTask = uploadBytesResumable(mountainsRef, file);
-        uploadTask.on('state_changed',
+        uploadTask.on(
+            'state_changed',
             (snapshot) => {
+                const progresss = document.getElementById("progress");
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                alert('Upload is ' + progress + '% done')
+                // console.log('Upload is ' + progress + '% done');
+                progresss.innerHTML = `<h1>${Math.floor(progress)}% done</h1>`;
+                if (progress === 100) {
+                    progresss.style.display = 'none';
+                } else {
+                    progresss.style.display = 'block';
+                }
                 switch (snapshot.state) {
                     case 'paused':
-                        console.log('Upload is paused');
+                        // console.log('Upload is paused');
                         break;
                     case 'running':
-                        console.log('Upload is running');
+                        // console.log('Upload is running');
                         break;
                 }
             },
             (error) => {
-                reject(error)
+                reject(error);
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -108,8 +115,9 @@ const uploadFile = (file) => {
                 });
             }
         );
-    })
+    });
 }
+
 
 upload.addEventListener('click', async () => {
     try {
@@ -119,29 +127,29 @@ upload.addEventListener('click', async () => {
         let img = document.getElementById("Profile-pic");
         img.src = res;
 
-// sfsafsfsd
-const uid = localStorage.getItem('user')
-var ref = doc(db, "users", uid);
-await updateDoc(
-    ref,{
-        img:img.src ,
-    }
-)
-        
+        // sfsafsfsd
+        const uid = localStorage.getItem('user')
+        var ref = doc(db, "users", uid);
+        await updateDoc(
+            ref, {
+            img: img.src,
+        }
+        )
+
     } catch (err) {
         console.log(err)
     }
 })
 
-const chatqury=()=>{
+const chatqury = () => {
     var innerwidth = window.innerWidth;
-      if (innerwidth <= 768) {
+    if (innerwidth <= 768) {
         // console.log(innerwidth)
         window.location.href = "Chat.html"
-      }
-      else {
+    }
+    else {
         window.location.href = "comChat.html"
-      }
+    }
 }
 
-window.chatqury=chatqury;
+window.chatqury = chatqury;

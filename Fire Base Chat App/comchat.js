@@ -23,43 +23,49 @@ const getOnlineUser = async (email) => {
         });
         var profname = document.getElementById("profname")
         //   console.log("Current cities in CA: ", user);
-        profname.innerHTML = `${user[0].name}`
+        // profname.innerHTML = `${user[0].name}`
     });
 }
 
 ////////////////////////////////////////
 const getAllUsers = async (email) => {
-
     const q = query(collection(db, "users"), where("email", "!=", email));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const user = [];
         querySnapshot.forEach((doc) => {
             user.push(doc.data());
         });
-        var Users_ChatBox = document.getElementById("Users-ChatBox")
-        //   console.log("Current cities in CA: ", user);
+        var Users_ChatBox = document.getElementById("Users-ChatBox");
+
+        // Clear the existing content in Users_ChatBox before populating new data
+        Users_ChatBox.innerHTML = '';
+
+        // console.log("Current cities in CA: ", user);
+
         for (let i = 0; i < user.length; i++) {
-            const { name, img, uid } = user[i];
-            const imgcheck = img ? img : `./img/profile.png`
-            // console.log(uid)
+            const { name, img, uid, Active } = user[i];
+            const imgcheck = img ? img : `./img/profile.png`;
+
             Users_ChatBox.innerHTML += `<ul class="contacts">
-          <li onclick="slectedChat('${name}','${imgcheck}','${uid}', '${email}')" class="active">
+            <li onclick="slectedChat('${name}','${imgcheck}','${uid}', '${email}','${Active}')" class="active">
             <div class="d-flex bd-highlight">
-              <div class="img_cont">
-                <img src=${imgcheck} class="rounded-circle user_img">
-                <span class="online_icon"></span>
-              </div>
-              <div class="user_info">
-                <span>${name}</span>
-                <p>${name} is online</p>
-              </div>
+            <div class="img_cont">
+            <img src=${imgcheck} class="rounded-circle user_img">
+            <span class="${Active ? 'online_icon' : 'offline'}"></span>
             </div>
-          </li>
-        </ul>`;
-            document.getElementById('loader').style.display = 'none';
+            <div class="user_info">
+            <span>${name}</span>
+            <p>${Active ? 'online' : 'offline'}</p>
+            </div>
+            </div>
+            </li>
+            </ul>`;
         }
+
+        document.getElementById('loader').style.display = 'none';
     });
 }
+
 document.getElementById('loader').style.display = 'block';
 
 onAuthStateChanged(auth, (user) => {
@@ -73,7 +79,7 @@ onAuthStateChanged(auth, (user) => {
 
 let slectedUserId;
 
-const slectedChat = (name, imgcheck, slectedUid, email) => {
+const slectedChat = (name, imgcheck, slectedUid, email,Active) => {
     // console.log(email )
     slectedUserId = slectedUid;
     const currentUserId = localStorage.getItem('user');
@@ -83,14 +89,24 @@ const slectedChat = (name, imgcheck, slectedUid, email) => {
     } else {
         ChatId = slectedUserId + currentUserId;
     }
+    const chatslectin = document.getElementById("chatslectin")
+    chatslectin.innerHTML = '';
+    chatslectin.innerHTML += ` <div class="img_cont">
+    <img id="slectedProImg"
+        src="${imgcheck}"
+        class="rounded-circle user_img">
+        </div>
+     <div class="user_info">
+    <span id="SlectedName">${name}</span>
+     </div>
+     `
 
-
-    const slectedProImg = document.getElementById("slectedProImg")
-    const SlectedName = document.getElementById("SlectedName")
+    // const slectedProImg = document.getElementById("slectedProImg")
+    // const SlectedName = document.getElementById("SlectedName")
     const displayNone = document.getElementById("displayNone")
-    slectedProImg.src = `${imgcheck}`;
+    // slectedProImg.src = `${imgcheck}`;
     // console.log(slectedProImg.src)
-    SlectedName.innerText = ` ${name}`;
+    // SlectedName.innerText = ` ${name}`;
     displayNone.style.display = 'block';
     // console.log(ChatId)
     getAllImg(ChatId, imgcheck, email)
